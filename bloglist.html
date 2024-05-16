@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="blogData" class="blog-area pt-100 pb-70">
+      <div class="container">
+        <div class="row justify-content-center">
+          <!-- Blog Cards will be appended here -->
+        </div>
+      </div>
+    </div>
+    <script>
+      const API_BASE_URL = "http://localhost:8000/api/v1/blog/getblog";
+
+      const callGetApi = async () => {
+        try {
+          let response = await fetch(API_BASE_URL);
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          let data = await response.json();
+          console.log(data);
+
+          const blogDataContainer = document.getElementById("blogData");
+
+          data.results.forEach((item) => {
+            const blogCard = document.createElement("div");
+            blogCard.classList.add("col-lg-4", "col-md-6");
+
+            blogCard.innerHTML = `
+                <div class="blog-card-two">
+                  <a href="${item.url}">
+                    <img src="${item.img}" alt="Blog Images" />
+                  </a>
+                  <div class="content">
+                    <ul>
+                      <li>
+                        <a href="author.html">
+                          <i class="bx bx-user"></i>By ${item.author}
+                        </a>
+                      </li>
+                      <li><i class="bx bx-calendar"></i> ${item.date}</li>
+                      <li><i class="bx bx-comment-dots"></i>4 Comments</li>
+                    </ul>
+                    <h3>
+                      <a href="${item.url}">${item.title}</a>
+                    </h3>
+                    <a href="${item.url}" class="read-btn">Read More</a>
+                  </div>
+                </div>
+              `;
+
+            blogDataContainer.querySelector(".row").appendChild(blogCard);
+          });
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      };
+
+      callGetApi();
+    </script>
+  </body>
+</html>
