@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog Detail</title>
+  </head>
+  <body>
+    <div id="blogDetail"></div>
+
+    <script>
+      const queryParams = new URLSearchParams(window.location.search);
+      const id = queryParams.get("id");
+      const API_BASE_URL = `http://localhost:8000/api/v1/blog/getblog/${id}`;
+
+      const getBlogDetail = async () => {
+        try {
+          let response = await fetch(API_BASE_URL);
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          let data = await response.json();
+          data = data.result;
+          document.getElementById("blogDetail").innerHTML = `
+          <h2>${data.title || "Title Not Available"}</h2>
+          <p>${data.desc || "Description Not Available"}</p>
+          <img src="${data.img || "placeholder.jpg"}" alt="${
+            data.title || "No Title"
+          }"/>
+`;
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      };
+
+      getBlogDetail();
+    </script>
+  </body>
+</html>
